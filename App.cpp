@@ -82,9 +82,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	int result = 0;
-	if (MessageBoxEx::MessageBox(result) == 0)
-		return 1;
+	if (MessageBoxEx::MessageBox(result) != 0)
+		_tprintf(to_wstring(result).c_str());
 
-	_tprintf(to_wstring(result).c_str());
 	return 0;
 }
