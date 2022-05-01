@@ -12,7 +12,7 @@ CommandLine::~CommandLine()
 
 void CommandLine::Help()
 {
-	_tprintf(_T("MessageBoxEx 0.5\n"));
+	_tprintf(_T("MessageBoxEx 0.5.1\n"));
 	_tprintf(_T("	MessageBoxEx for command line. Amiga Rulez!\n"));
 	_tprintf(_T("\nUsage:\n"));
 	_tprintf(_T("	MessageBoxEx [options]\n"));

@@ -31,6 +31,7 @@ bool	MessageBoxEx::center				= false;
 
 wstring MessageBoxEx::iconFile				= _T("");
 int		MessageBoxEx::iconSize				= 0;
+bool	MessageBoxEx::iconBorder			= false;
 
 pair<bool, wstring>	MessageBoxEx::brush			= pair<bool, wstring>(false, _T("#000000"));
 pair<bool, wstring> MessageBoxEx::background	= pair<bool, wstring>(false, _T("#000000"));
@@ -186,7 +187,8 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 				if (MessageBoxEx::iconSize == 0) MessageBoxEx::iconSize = 48;
 				MessageBoxEx::mIcon = (HBITMAP)LoadImage(hInst, MessageBoxEx::iconFile.c_str(), IMAGE_BITMAP, MessageBoxEx::iconSize, MessageBoxEx::iconSize, LR_LOADFROMFILE);
 				if (MessageBoxEx::mIcon) {
-					mhWndIcon = CreateWindow(_T("Static"), NULL, WS_CHILD | WS_VISIBLE | SS_BITMAP | WS_BORDER, 10, 10, MessageBoxEx::iconSize, MessageBoxEx::iconSize, _hWnd, NULL, hInst, NULL);
+					if (MessageBoxEx::iconBorder)	mhWndIcon = CreateWindow(_T("Static"), NULL, WS_CHILD | WS_VISIBLE | SS_BITMAP | WS_BORDER	, 10, 10, MessageBoxEx::iconSize, MessageBoxEx::iconSize, _hWnd, NULL, hInst, NULL);
+					else							mhWndIcon = CreateWindow(_T("Static"), NULL, WS_CHILD | WS_VISIBLE | SS_BITMAP 				, 10, 10, MessageBoxEx::iconSize, MessageBoxEx::iconSize, _hWnd, NULL, hInst, NULL);
 					SendMessage(mhWndIcon, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)MessageBoxEx::mIcon);
 				}
 				else MessageBoxEx::iconSize = 0;

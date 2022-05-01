@@ -40,6 +40,7 @@ public:
 	static wstring prompt;
 	static wstring iconFile;
 	static int iconSize;
+	static bool iconBorder;
 
 	static int buttons;
 	static int defaultButton;
