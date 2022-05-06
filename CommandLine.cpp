@@ -12,7 +12,7 @@ CommandLine::~CommandLine()
 
 void CommandLine::Help()
 {
-	wcout << _T("MessageBoxEx 0.5.3") << endl;
+	wcout << _T("MessageBoxEx 0.5.6") << endl;
 	wcout << _T("	MessageBoxEx for command line. Amiga Rulez!") << endl << endl;
 	wcout << _T("Usage:") << endl;
 	wcout << _T("	MessageBoxEx [options]") << endl << endl;

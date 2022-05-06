@@ -191,7 +191,15 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 					else							mhWndIcon = CreateWindow(_T("Static"), NULL, WS_CHILD | WS_VISIBLE | SS_BITMAP 				, 10, 10, MessageBoxEx::iconSize, MessageBoxEx::iconSize, _hWnd, NULL, hInst, NULL);
 					SendMessage(mhWndIcon, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)MessageBoxEx::mIcon);
 				}
-				else MessageBoxEx::iconSize = 0;
+				else {
+					//MessageBoxEx::iconSize = 0;
+					//MessageBoxEx::iconBorder = false;
+					mhWndIcon = CreateWindow(_T("Static"), NULL, WS_CHILD | WS_VISIBLE | SS_BITMAP | WS_BORDER, 10, 10, MessageBoxEx::iconSize, MessageBoxEx::iconSize, _hWnd, NULL, hInst, NULL);
+				}
+			}
+			else {
+				MessageBoxEx::iconSize = 0;
+				MessageBoxEx::iconBorder = false;
 			}
 
 			// message
@@ -344,6 +352,11 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 bool MessageBoxEx::MessageBox(int& _result)
 {
 	mhWndParent = GetActiveWindow();
+	if (!mhWndParent)
+		mhWndParent = GetForegroundWindow();
+	if (!mhWndParent)
+		mhWndParent = GetDesktopWindow();
+
 	RECT rc;
 	GetWindowRect(mhWndParent, &rc);
 
