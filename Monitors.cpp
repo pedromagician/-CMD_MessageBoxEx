@@ -21,7 +21,7 @@ bool Monitors::GetMonitorInfoId(UINT _id, RECT& _monitor)
 	Monitors monitors;
 
 	if (_id > monitors.iMonitors.size() - 1) {
-		_tprintf(wstring(_T("Error - problem with monitor ") + to_wstring(_id)).c_str());
+		wcout << _T("Error - problem with monitor ") + to_wstring(_id) << endl;
 		_id = 0;
 	}
 

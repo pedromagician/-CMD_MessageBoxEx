@@ -12,18 +12,18 @@ CommandLine::~CommandLine()
 
 void CommandLine::Help()
 {
-	_tprintf(_T("MessageBoxEx 0.5.2\n"));
-	_tprintf(_T("	MessageBoxEx for command line. Amiga Rulez!\n"));
-	_tprintf(_T("\nUsage:\n"));
-	_tprintf(_T("	MessageBoxEx [options]\n"));
-	_tprintf(_T("\nOptions:\n"));
+	wcout << _T("MessageBoxEx 0.5.3") << endl;
+	wcout << _T("	MessageBoxEx for command line. Amiga Rulez!") << endl << endl;
+	wcout << _T("Usage:") << endl;
+	wcout << _T("	MessageBoxEx [options]") << endl << endl;
+	wcout << _T("Options:") << endl;
 
 	for (const auto& it : mArguments)
 	{
 		for (const auto& text : it.text) {
-			_tprintf((_T("	") + text + _T(" xxx\n")).c_str());
+			wcout << _T("	") + text + _T(" xxx") << endl;
 		}
-		_tprintf((_T("		") + it.help + _T("\n")).c_str());
+		wcout << _T("		") + it.help << endl;
 	}
 }
 
@@ -47,7 +47,7 @@ void CommandLine::Add(ARGUMENT_TYPE _type, int _num, ...)
 		for (const auto& itArg : mArguments) {
 			for (const auto& itParam : itArg.text) {
 				if (itParam == Conversion::ToLower(Conversion::TrimWhiteChar(tmp)))
-					_tprintf(_T("Error - the same switch, you will not be able to use it\n"));
+					wcout << _T("Error - the same switch, you will not be able to use it") << endl;
 			}
 		}
 #endif // DEBUG
@@ -116,7 +116,7 @@ int CommandLine::ParseCommandLine(int _argc, _TCHAR* _pArgv[], int& _correctPara
 							unknown = false;
 						}
 						else {
-							_tprintf(wstring(_T("Error - bad argument: ") + mArguments[a].text[0] + _T(" ") + key + _T("\n")).c_str());
+							wcout << _T("Error - bad argument: ") + mArguments[a].text[0] + _T(" ") + key << endl;
 							return 1;
 						}
 						_correctParameters++;
@@ -124,13 +124,13 @@ int CommandLine::ParseCommandLine(int _argc, _TCHAR* _pArgv[], int& _correctPara
 					break;
 				}
 				else {
-					_tprintf(_T("Error - unknown type\n"));
+					wcout << _T("Error - unknown type") << endl;
 					return 1;
 				}
 			}
 		}
 		if (unknown) {
-			_tprintf(wstring(_T("Error - unknown argument: ") + (wstring)_pArgv[i] + _T("\n")).c_str());
+			wcout << _T("Error - unknown argument: ") + (wstring)_pArgv[i] << endl;
 			return 1;
 		}
 	}

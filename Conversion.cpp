@@ -85,7 +85,7 @@ void Conversion::HexToRGB(wstring _hex, int& _r, int& _g, int& _b)
 		sb = _hex.substr(2, 1);
 	}
 	else {
-		_tprintf(_T("Error - bad color\n"));
+		wcout << _T("Error - bad color") << endl;
 	}
 	_r = ToInt(sr, 16);
 	_g = ToInt(sg, 16);

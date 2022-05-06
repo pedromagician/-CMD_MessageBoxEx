@@ -284,7 +284,7 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 					break;
 				}
 				default:
-					_tprintf(wstring(_T("Error - unknown position: ") + to_wstring(MessageBoxEx::position.type) + _T("\n")).c_str());
+					wcout << _T("Error - unknown position: ") + to_wstring(MessageBoxEx::position.type) << endl;
 					MessageBoxEx::position.type = _CENTER;
 					monitor = Monitors::GetMonitorInfoPrimary(monitorSize);
 					x = GetDiameterX(monitorSize) - GetWidth(dialogRect) / 2;
@@ -293,7 +293,7 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 				}
 			}
 			else {
-				_tprintf(wstring(_T("Error - problem loading information from the monitor")).c_str());
+				wcout << _T("Error - problem loading information from the monitor") << endl;
 				MessageBoxEx::position.monitor = _PRIMARY;
 				MessageBoxEx::position.type = _XY;
 				x = monitorSize.left;
@@ -343,9 +343,9 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 
 bool MessageBoxEx::MessageBox(int& _result)
 {
-	HWND hWnd = GetDesktopWindow();
+	mhWndParent = GetActiveWindow();
 	RECT rc;
-	GetWindowRect(hWnd, &rc);
+	GetWindowRect(mhWndParent, &rc);
 
 	HINSTANCE hInst = GetModuleHandle(nullptr);
 	WNDCLASSEX wcex;
@@ -365,7 +365,7 @@ bool MessageBoxEx::MessageBox(int& _result)
 		wcex.hIconSm = nullptr;
 
 		if (RegisterClassEx(&wcex) == 0) {
-			_tprintf(_T("Error - register class\n"));
+			wcout << _T("Error - register class") << endl;
 			return false;
 		}
 	}
@@ -373,7 +373,6 @@ bool MessageBoxEx::MessageBox(int& _result)
 	// window
 	int buttonY = 10 + fontSize / 2 + fontSize * linesOfText + 10;
 	int buttonHeight = fontSize + 8;
-	mhWndParent = hWnd;
 	mhWndMessageBoxEx = CreateWindowEx(
 		WS_EX_DLGMODALFRAME, _T("MessageBoxEx"), title.c_str(), 
 		WS_POPUPWINDOW | WS_CAPTION | WS_TABSTOP | WS_VISIBLE, 

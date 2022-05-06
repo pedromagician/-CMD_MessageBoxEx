@@ -5,12 +5,11 @@
 #include <algorithm>
 #include <atlbase.h>
 #include <activscp.h>
-#include <comdef.h>
 #include <iostream>
 #include <string>
 #include <map>
 #include <vector>
-#include "tchar.h"
-#include "resource.h"
+#include <io.h>
+#include <fcntl.h>
 
 using namespace std;
