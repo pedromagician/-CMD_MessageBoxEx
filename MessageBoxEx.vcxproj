@@ -97,6 +97,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="CommandLine.h" />
     <ClInclude Include="Conversion.h" />
+    <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="project.rc" />
