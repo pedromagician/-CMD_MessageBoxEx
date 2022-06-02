@@ -33,6 +33,8 @@ wstring MessageBoxEx::iconFile				= _T("");
 int		MessageBoxEx::iconSize				= 0;
 bool	MessageBoxEx::iconBorder			= false;
 
+bool	MessageBoxEx::topMost				= false;
+
 pair<bool, wstring>	MessageBoxEx::brush			= pair<bool, wstring>(false, _T("#000000"));
 pair<bool, wstring> MessageBoxEx::background	= pair<bool, wstring>(false, _T("#000000"));
 pair<bool, wstring> MessageBoxEx::pen			= pair<bool, wstring>(false, _T("#ffffff"));
@@ -311,8 +313,11 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 			x += MessageBoxEx::position.delta.x;
 			y += MessageBoxEx::position.delta.y;
 
-			SetWindowPos(_hWnd, HWND_TOPMOST, x, y, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_SHOWWINDOW);
+			UINT flags = SWP_NOSIZE | SWP_SHOWWINDOW;
+			if (MessageBoxEx::topMost == false)
+				flags |= SWP_NOZORDER;
 
+			SetWindowPos(_hWnd, HWND_TOPMOST, x, y, 0, 0, flags);
 			break;
 		}
 		case WM_DESTROY: {

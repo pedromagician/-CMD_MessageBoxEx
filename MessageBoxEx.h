@@ -41,6 +41,7 @@ public:
 	static wstring iconFile;
 	static int iconSize;
 	static bool iconBorder;
+	static bool topMost;
 
 	static int buttons;
 	static int defaultButton;
