@@ -32,6 +32,7 @@ bool	MessageBoxEx::center				= false;
 wstring MessageBoxEx::iconFile				= _T("");
 int		MessageBoxEx::iconSize				= 0;
 bool	MessageBoxEx::iconBorder			= false;
+wstring MessageBoxEx::iconApp				= _T("");
 
 bool	MessageBoxEx::topMost				= false;
 
@@ -202,6 +203,31 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 			else {
 				MessageBoxEx::iconSize = 0;
 				MessageBoxEx::iconBorder = false;
+			}
+
+			// icon app
+			if (MessageBoxEx::iconApp.empty() == false) {
+				HICON hIcon = nullptr;
+				hIcon = (HICON)LoadImage(hInst, MessageBoxEx::iconApp.c_str(), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_LOADFROMFILE);
+				if (!hIcon) {
+					HBITMAP bitmapForIconApp = nullptr;
+					bitmapForIconApp = (HBITMAP)LoadImage(hInst, MessageBoxEx::iconApp.c_str(), IMAGE_BITMAP, 0, 0, LR_DEFAULTSIZE | LR_LOADFROMFILE);
+					if (bitmapForIconApp) {
+						ICONINFO ii = { 0 };
+						ii.fIcon = TRUE;
+						ii.hbmColor = bitmapForIconApp;
+						ii.hbmMask = bitmapForIconApp;
+
+						hIcon = ::CreateIconIndirect(&ii);
+
+						::DeleteObject(bitmapForIconApp);
+					}
+				}
+
+				if (hIcon) {
+					SendMessage(_hWnd, WM_SETICON, (WPARAM)ICON_SMALL, (LPARAM)hIcon);
+					SendMessage(_hWnd, WM_SETICON, (WPARAM)ICON_BIG, (LPARAM)hIcon);
+				}
 			}
 
 			// message
@@ -396,7 +422,7 @@ bool MessageBoxEx::MessageBox(int& _result)
 		WS_POPUPWINDOW | WS_CAPTION | WS_TABSTOP | WS_VISIBLE, 
 		(rc.right - MessageBoxEx::width) / 2, (rc.bottom - MessageBoxEx::width / 2) / 2, 
 		MessageBoxEx::width, 50 + buttonY + buttonHeight,
-		mhWndParent, nullptr, nullptr, nullptr
+		/*mhWndParent*/ nullptr, nullptr, nullptr, nullptr
 	);
 	if (mhWndMessageBoxEx == nullptr) {
 		return false;
@@ -421,7 +447,7 @@ bool MessageBoxEx::MessageBox(int& _result)
 		MessageBoxEx::mResultFromButtons = MessageBoxEx::defaultButton;
 	}
 
-	EnableWindow(mhWndParent, FALSE);
+	//EnableWindow(mhWndParent, FALSE);
 	ShowWindow(mhWndMessageBoxEx, SW_SHOW);
 	UpdateWindow(mhWndMessageBoxEx);
 

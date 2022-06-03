@@ -39,6 +39,7 @@ public:
 	static wstring title;
 	static wstring prompt;
 	static wstring iconFile;
+	static wstring iconApp;
 	static int iconSize;
 	static bool iconBorder;
 	static bool topMost;

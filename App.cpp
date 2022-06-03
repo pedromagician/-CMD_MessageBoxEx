@@ -45,9 +45,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	cmd.Add(CommandLine::_COLOR,	2,	_T("-pen"),			_T("-p"),				_T("The 'xxx' argument specifies the colour of the pen."),											&MessageBoxEx::pen);
 	cmd.Add(CommandLine::_COLOR,	2,	_T("-background"),	_T("-b"),				_T("The 'xxx' argument specifies the background color."),											&MessageBoxEx::background);
 	cmd.Add(CommandLine::_COLOR,	2,	_T("-brush"),		_T("-br"),				_T("The 'xxx' argument determines the brush."),														&MessageBoxEx::brush);
-	cmd.Add(CommandLine::_STRING,	2,	_T("-icon"),		_T("-i"),				_T("The 'xxx' argument specifies the icon file. (BMP)"),											&MessageBoxEx::iconFile);
-	cmd.Add(CommandLine::_INT,		1,	_T("-iconsize"),							_T("The 'xxx' argument specifies the size of the icon."),											&MessageBoxEx::iconSize);
-	cmd.Add(CommandLine::_TRUE,		1,	_T("-iconborder"),							_T("This argument allows you to draw a border around the icon."),									&MessageBoxEx::iconBorder);
+	cmd.Add(CommandLine::_STRING,	2,	_T("-icon"),		_T("-i"),				_T("The 'xxx' argument specifies the image file. (BMP)"),											&MessageBoxEx::iconFile);
+	cmd.Add(CommandLine::_INT,		1,	_T("-iconsize"),							_T("The 'xxx' argument specifies the size of the image."),											&MessageBoxEx::iconSize);
+	cmd.Add(CommandLine::_TRUE,		1,	_T("-iconborder"),							_T("This argument allows you to draw a border around the image."),									&MessageBoxEx::iconBorder);
+	cmd.Add(CommandLine::_STRING,	1,	_T("-iconapp"),								_T("The 'xxx' argument specifies the icon file for the application. (ICO/BMP)"),					&MessageBoxEx::iconApp);
 	cmd.Add(CommandLine::_ENUM,		1,	_T("-button"),								_T("The argument 'xxx' specifies the number of buttons. Allowed options: 1|2|3."),					&MessageBoxEx::buttons,			&string2buttons);
 	cmd.Add(CommandLine::_TRUE,		1,	_T("-center"),								_T("The argument enables button centering."),														&MessageBoxEx::center);
 	cmd.Add(CommandLine::_STRING,	1,	_T("-b1"),									_T("The 'xxx' argument specifies the text of the button 1."),										&MessageBoxEx::button1);
