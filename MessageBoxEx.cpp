@@ -35,6 +35,7 @@ bool	MessageBoxEx::iconBorder			= false;
 wstring MessageBoxEx::iconApp				= _T("");
 
 bool	MessageBoxEx::topMost				= false;
+bool	MessageBoxEx::blockParent			= false;
 
 pair<bool, wstring>	MessageBoxEx::brush			= pair<bool, wstring>(false, _T("#000000"));
 pair<bool, wstring> MessageBoxEx::background	= pair<bool, wstring>(false, _T("#000000"));
@@ -417,12 +418,17 @@ bool MessageBoxEx::MessageBox(int& _result)
 	// window
 	int buttonY = 10 + fontSize / 2 + fontSize * linesOfText + 10;
 	int buttonHeight = fontSize + 8;
+
+	HWND parent = nullptr;
+	if (MessageBoxEx::blockParent)
+		parent = mhWndParent;
+
 	mhWndMessageBoxEx = CreateWindowEx(
 		WS_EX_DLGMODALFRAME, _T("MessageBoxEx"), title.c_str(), 
 		WS_POPUPWINDOW | WS_CAPTION | WS_TABSTOP | WS_VISIBLE, 
 		(rc.right - MessageBoxEx::width) / 2, (rc.bottom - MessageBoxEx::width / 2) / 2, 
 		MessageBoxEx::width, 50 + buttonY + buttonHeight,
-		/*mhWndParent*/ nullptr, nullptr, nullptr, nullptr
+		parent, nullptr, nullptr, nullptr
 	);
 	if (mhWndMessageBoxEx == nullptr) {
 		return false;
@@ -447,7 +453,8 @@ bool MessageBoxEx::MessageBox(int& _result)
 		MessageBoxEx::mResultFromButtons = MessageBoxEx::defaultButton;
 	}
 
-	//EnableWindow(mhWndParent, FALSE);
+	if (MessageBoxEx::blockParent)
+		EnableWindow(mhWndParent, FALSE);
 	ShowWindow(mhWndMessageBoxEx, SW_SHOW);
 	UpdateWindow(mhWndMessageBoxEx);
 

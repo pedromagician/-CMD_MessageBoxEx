@@ -60,6 +60,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cmd.Add(CommandLine::_INT,		1,	_T("-x"),									_T("The 'xxx' argument specifies the position offset along the X coordinate."),						&MessageBoxEx::position.delta.x);
 	cmd.Add(CommandLine::_INT,		1,	_T("-y"),									_T("The 'xxx' argument specifies the position offset along the Y coordinate."),						&MessageBoxEx::position.delta.y);
 	cmd.Add(CommandLine::_TRUE,		1,	_T("-topmost"),								_T("This argument places the window above all windows that are not in the highest position.The window retains its highest position even if it is deactivated."),	&MessageBoxEx::topMost);
+	cmd.Add(CommandLine::_TRUE,		1,	_T("-block"),								_T("This argument blocks the parent process that started the InputBox."),							&MessageBoxEx::blockParent);
 
 	if (cmd.ParseCommandLine(argc, argv, correctParameters) != 0) {
 		cmd.Help();

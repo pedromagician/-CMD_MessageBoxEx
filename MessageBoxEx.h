@@ -43,6 +43,7 @@ public:
 	static int iconSize;
 	static bool iconBorder;
 	static bool topMost;
+	static bool blockParent;
 
 	static int buttons;
 	static int defaultButton;
