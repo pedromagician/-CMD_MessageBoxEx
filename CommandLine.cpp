@@ -80,7 +80,7 @@ int CommandLine::ParseCommandLine(int _argc, _TCHAR* _pArgv[], int& _correctPara
 						wcout << _T("Error - missing argument: ") + (wstring)_pArgv[i-1] << endl;
 						return 1;
 					}
-					wstring tmp = Conversion::TrimWhiteChar(_pArgv[i]);
+					wstring tmp = _pArgv[i];
 					Conversion::StringReplaceAll(tmp, _T("\\n"), _T("\n"));
 					*((wstring*)mArguments[a].pVar) = tmp;
 					_correctParameters++;
