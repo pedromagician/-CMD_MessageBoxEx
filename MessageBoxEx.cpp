@@ -37,6 +37,8 @@ wstring MessageBoxEx::iconApp				= _T("");
 bool	MessageBoxEx::topMost				= false;
 bool	MessageBoxEx::blockParent			= false;
 
+bool	MessageBoxEx::windowsReturnCode		= false;
+
 pair<bool, wstring>	MessageBoxEx::brush			= pair<bool, wstring>(false, _T("#000000"));
 pair<bool, wstring> MessageBoxEx::background	= pair<bool, wstring>(false, _T("#000000"));
 pair<bool, wstring> MessageBoxEx::pen			= pair<bool, wstring>(false, _T("#ffffff"));

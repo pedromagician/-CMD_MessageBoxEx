@@ -44,6 +44,7 @@ public:
 	static bool iconBorder;
 	static bool topMost;
 	static bool blockParent;
+	static bool windowsReturnCode;
 
 	static int buttons;
 	static int defaultButton;

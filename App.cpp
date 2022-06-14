@@ -61,6 +61,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cmd.Add(CommandLine::_INT,		1,	_T("-y"),									_T("The 'xxx' argument specifies the position offset along the Y coordinate."),						&MessageBoxEx::position.delta.y);
 	cmd.Add(CommandLine::_TRUE,		1,	_T("-topmost"),								_T("This argument places the window above all windows that are not in the highest position.The window retains its highest position even if it is deactivated."),	&MessageBoxEx::topMost);
 	cmd.Add(CommandLine::_TRUE,		1,	_T("-block"),								_T("This argument blocks the parent process that started the InputBox."),							&MessageBoxEx::blockParent);
+	cmd.Add(CommandLine::_TRUE,		2,	_T("-windowsReturnCode"),	_T("-wrc"),		_T("The argument enables the Windows return code."),												&MessageBoxEx::windowsReturnCode);
 
 	if (cmd.ParseCommandLine(argc, argv, correctParameters) != 0) {
 		cmd.Help();
@@ -74,7 +75,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	if (MessageBoxEx::prompt.empty()) {
 		wcout << _T("Error - message is emnpty") << endl;
-		return 1;
+		return 0;
 	}
 
 	monitor = Conversion::ToLower(Conversion::TrimWhiteChar(monitor));
@@ -87,8 +88,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	int result = 0;
-	if (MessageBoxEx::MessageBox(result) != 0)
-		wcout << to_wstring(result);
+	if (MessageBoxEx::MessageBox(result) != 0) {
+		if (MessageBoxEx::windowsReturnCode) {
+			if (result == 1) result = IDYES;
+			else if (result == 2) result = IDNO;
+			else if (result == 3) result = IDCANCEL;
+		}
 
-	return 0;
+		wcout << to_wstring(result);
+	}
+
+	return result;
 }
