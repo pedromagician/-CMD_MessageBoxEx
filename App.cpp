@@ -62,6 +62,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cmd.Add(CommandLine::_TRUE,		1,	_T("-topmost"),								_T("This argument places the window above all windows that are not in the highest position.The window retains its highest position even if it is deactivated."),	&MessageBoxEx::topMost);
 	cmd.Add(CommandLine::_TRUE,		1,	_T("-block"),								_T("This argument blocks the parent process that started the InputBox."),							&MessageBoxEx::blockParent);
 	cmd.Add(CommandLine::_TRUE,		2,	_T("-windowsReturnCode"),	_T("-wrc"),		_T("The argument enables the Windows return code."),												&MessageBoxEx::windowsReturnCode);
+	cmd.Add(CommandLine::_TRUE,		1,	_T("-quiet"),								_T("The argument disables output to the command line."),											&MessageBoxEx::quiet);
 
 	if (cmd.ParseCommandLine(argc, argv, correctParameters) != 0) {
 		cmd.Help();
@@ -95,7 +96,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			else if (result == 3) result = IDCANCEL;
 		}
 
-		wcout << to_wstring(result);
+		if (MessageBoxEx::quiet == false)
+			wcout << to_wstring(result);
 	}
 
 	return result;

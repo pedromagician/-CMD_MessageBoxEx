@@ -46,6 +46,8 @@ public:
 	static bool blockParent;
 	static bool windowsReturnCode;
 
+	static bool quiet;
+
 	static int buttons;
 	static int defaultButton;
 	static wstring button1;
