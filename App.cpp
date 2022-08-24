@@ -24,10 +24,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	};
 
 	map<wstring, UINT> string2buttons{
+		{_T("0"),	0},
 		{_T("1"),	1},
 		{_T("2"),	2},
 		{_T("3"),	3}
 	};
+
+	map<wstring, UINT> defString2buttons{
+		{_T("1"),	1},
+		{_T("2"),	2},
+		{_T("3"),	3}
+	};
+
+	MessageBoxEx::timeUntilEndOfApplication	= -1;
+	MessageBoxEx::minimumDisplayTime		= -1;
+	MessageBoxEx::fileRequiredForCompletion	= _T("");
+	MessageBoxEx::deleteFileRequiredForCompletion = false;
 
 	MessageBoxEx::position.monitor	= MessageBoxEx::_PRIMARY;
 	MessageBoxEx::position.id		= 0;
@@ -36,6 +48,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	CommandLine cmd;
 	cmd.Add(CommandLine::_STRING,	2,	_T("-title"),		_T("-t"),				_T("The 'xxx' argument specifies the name of the dialog."),											&MessageBoxEx::title);
+	cmd.Add(CommandLine::_TRUE,		2,	_T("-noTitle"),		_T("-nt"),				_T("This argument turns off the border of the dialog."),											&MessageBoxEx::noTitle);
 	cmd.Add(CommandLine::_STRING,	2,	_T("-message"),		_T("-m"),				_T("The 'xxx' argument specifies the text of the dialog. A new line can be inserted using \\n."),	&MessageBoxEx::prompt);
 	cmd.Add(CommandLine::_TRUE,		3,	_T("-help"),		_T("-h"),	_T("-?"),	_T("To view help."),																				&help);
 	cmd.Add(CommandLine::_STRING,	2,	_T("-font"),		_T("-f"),				_T("The 'xxx' argument specifies the font of the dialog box."),										&MessageBoxEx::fontName);
@@ -49,12 +62,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	cmd.Add(CommandLine::_INT,		1,	_T("-iconsize"),							_T("The 'xxx' argument specifies the size of the image."),											&MessageBoxEx::iconSize);
 	cmd.Add(CommandLine::_TRUE,		1,	_T("-iconborder"),							_T("This argument allows you to draw a border around the image."),									&MessageBoxEx::iconBorder);
 	cmd.Add(CommandLine::_STRING,	1,	_T("-iconapp"),								_T("The 'xxx' argument specifies the icon file for the application. (ICO/BMP)"),					&MessageBoxEx::iconApp);
-	cmd.Add(CommandLine::_ENUM,		1,	_T("-button"),								_T("The argument 'xxx' specifies the number of buttons. Allowed options: 1|2|3."),					&MessageBoxEx::buttons,			&string2buttons);
+	cmd.Add(CommandLine::_ENUM,		1,	_T("-button"),								_T("The argument 'xxx' specifies the number of buttons. Allowed options: 0|1|2|3."),				&MessageBoxEx::buttons,			&string2buttons);
 	cmd.Add(CommandLine::_TRUE,		1,	_T("-center"),								_T("The argument enables button centering."),														&MessageBoxEx::center);
 	cmd.Add(CommandLine::_STRING,	1,	_T("-b1"),									_T("The 'xxx' argument specifies the text of the button 1."),										&MessageBoxEx::button1);
 	cmd.Add(CommandLine::_STRING,	1,	_T("-b2"),									_T("The 'xxx' argument specifies the text of the button 2."),										&MessageBoxEx::button2);
 	cmd.Add(CommandLine::_STRING,	1,	_T("-b3"),									_T("The 'xxx' argument specifies the text of the button 3."),										&MessageBoxEx::button3);
-	cmd.Add(CommandLine::_ENUM,		2,	_T("-default"),		_T("-d"),				_T("The 'xxx' argument specifies the default button. Allowed options: 1|2|3."),						&MessageBoxEx::defaultButton,	&string2buttons);
+	cmd.Add(CommandLine::_ENUM,		2,	_T("-default"),		_T("-d"),				_T("The 'xxx' argument specifies the default button. Allowed options: 1|2|3."),						&MessageBoxEx::defaultButton,	&defString2buttons);
 	cmd.Add(CommandLine::_STRING,	2,	_T("-monitor"),		_T("-mon"),				_T("The 'xxx' argument specifies the default monitor. Allowed options: Primary|Mouse|MousePointer|0|1|2|n."),		&monitor);
 	cmd.Add(CommandLine::_ENUM,		2,	_T("-position"),	_T("-pos"),				_T("The 'xxx' argument specifies the default position. Allowed options: Center|Top|Bottom|Left|Right|Pointer|xy."), &MessageBoxEx::position.type,	&string2positionType);
 	cmd.Add(CommandLine::_INT,		1,	_T("-x"),									_T("The 'xxx' argument specifies the position offset along the X coordinate."),						&MessageBoxEx::position.delta.x);
@@ -63,6 +76,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	cmd.Add(CommandLine::_TRUE,		1,	_T("-block"),								_T("This argument blocks the parent process that started the InputBox."),							&MessageBoxEx::blockParent);
 	cmd.Add(CommandLine::_TRUE,		2,	_T("-windowsReturnCode"),	_T("-wrc"),		_T("The argument enables the Windows return code."),												&MessageBoxEx::windowsReturnCode);
 	cmd.Add(CommandLine::_TRUE,		1,	_T("-quiet"),								_T("The argument disables output to the command line."),											&MessageBoxEx::quiet);
+	cmd.Add(CommandLine::_INT,		2,	_T("-minimumDisplayTime"),	_T("-mdt"),		_T("The 'xxx' argument specifies the minimum amount of time that the dialog will be displayed."),	&MessageBoxEx::minimumDisplayTime);
+	cmd.Add(CommandLine::_INT,		2,	_T("-timeToCompletion"),	_T("-ttc"),		_T("The 'xxx' argument specifies the time until the dialog is closed."),							&MessageBoxEx::timeUntilEndOfApplication);
+	cmd.Add(CommandLine::_STRING,	3,	_T("-fileRequiredForCompletion"),		_T("-frfc"),	_T("-file"),		_T("The 'xxx' argument specifies the file that, if it exists, will cause the dialog to close."),	&MessageBoxEx::fileRequiredForCompletion);
+	cmd.Add(CommandLine::_TRUE,		3,	_T("-deleteFileRequiredForCompletion"), _T("-dfrfc"),	_T("-deleteFile"),	_T("This argument allows you to delete the test file after closing the dialog box."),				&MessageBoxEx::deleteFileRequiredForCompletion);
 
 	if (cmd.ParseCommandLine(argc, argv, correctParameters) != 0) {
 		cmd.Help();
@@ -89,7 +106,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	int result = 0;
-	if (MessageBoxEx::MessageBox(result) != 0) {
+	if (MessageBoxEx::MessageBox(result)) {
 		if (MessageBoxEx::windowsReturnCode) {
 			if (result == 1) result = IDYES;
 			else if (result == 2) result = IDNO;

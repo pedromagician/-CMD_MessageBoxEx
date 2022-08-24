@@ -13,6 +13,7 @@ HWND	MessageBoxEx::mhWnd3		= nullptr;
 HWND	MessageBoxEx::mhWndIcon		= nullptr;
 HBRUSH	MessageBoxEx::mhbrBkgnd		= nullptr;
 int		MessageBoxEx::mResultFromButtons = 0;
+bool	MessageBoxEx::mRunning		= true;
 HBITMAP	MessageBoxEx::mIcon			= nullptr;
 
 int		MessageBoxEx::width					= 600;
@@ -21,6 +22,7 @@ int		MessageBoxEx::linesOfText			= 1;
 wstring	MessageBoxEx::fontName				= _T("Consolas");
 
 wstring MessageBoxEx::title					= _T("MessageBoxEx");
+bool	MessageBoxEx::noTitle				= false;
 wstring MessageBoxEx::prompt				= _T("Message.");
 int		MessageBoxEx::buttons				= 1;
 int		MessageBoxEx::defaultButton			= 1;
@@ -28,6 +30,11 @@ wstring MessageBoxEx::button1				= _T("Yes");
 wstring MessageBoxEx::button2				= _T("No");
 wstring MessageBoxEx::button3				= _T("Cancel");
 bool	MessageBoxEx::center				= false;
+
+int		MessageBoxEx::timeUntilEndOfApplication = -1;
+int		MessageBoxEx::minimumDisplayTime		= -1;
+wstring MessageBoxEx::fileRequiredForCompletion = _T("");
+bool	MessageBoxEx::deleteFileRequiredForCompletion = false;
 
 wstring MessageBoxEx::iconFile				= _T("");
 int		MessageBoxEx::iconSize				= 0;
@@ -130,63 +137,65 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 			hInst = GetModuleHandle(nullptr);
 
 			// buttons
-			int buttonX = 0;
-			int buttonWidth = fontSize * 120 / 22;
-			int buttonHeight = fontSize + 8;
-			int buttonY = 10 + fontSize / 2 + fontSize * linesOfText + 10;
+			if (MessageBoxEx::buttons > 0) {
+				int buttonX = 0;
+				int buttonWidth = fontSize * 120 / 22;
+				int buttonHeight = fontSize + 8;
+				int buttonY = 10 + fontSize / 2 + fontSize * linesOfText + 10;
 
-			// button 1
-			if (MessageBoxEx::center) {
-				if (MessageBoxEx::buttons == 1)
-					buttonX = MessageBoxEx::width / 2 - buttonWidth / 2;
-				else if (MessageBoxEx::buttons == 2)
-					buttonX = MessageBoxEx::width / 2 - (buttonWidth * 2 + 20) / 2 - 10;
-				else
-					buttonX = MessageBoxEx::width / 2 - (buttonWidth * 3 + 40) / 2 - 5;
-			}
-			else {
-				if (MessageBoxEx::buttons == 1)
-					buttonX = MessageBoxEx::width - 25 - buttonWidth * 1 - 10;
-				else if (MessageBoxEx::buttons == 2)
-					buttonX = MessageBoxEx::width - 25 - buttonWidth * 2 - 10 - 20;
-				else
-					buttonX = MessageBoxEx::width - 25 - buttonWidth * 3 - 10 - 20 * 2;
-			}
-
-			mhWnd1 = CreateWindowEx(WS_EX_STATICEDGE, _T("Button"), MessageBoxEx::button1.c_str(), WS_VISIBLE | WS_CHILD | WS_TABSTOP, buttonX, buttonY, buttonWidth, buttonHeight, _hWnd, nullptr, hInst, nullptr);
-			if (mhWnd1 == nullptr) return (LRESULT)nullptr;
-			SendMessage((mhWnd1), WM_SETFONT, (WPARAM)mhFont, 0);
-
-			// button 2
-			if (MessageBoxEx::buttons >= 2) {
+				// button 1
 				if (MessageBoxEx::center) {
-					if (MessageBoxEx::buttons == 2)
-						buttonX = MessageBoxEx::width / 2 - (buttonWidth * 2 + 20) / 2 + buttonWidth + 20 - 10;
+					if (MessageBoxEx::buttons == 1)
+						buttonX = MessageBoxEx::width / 2 - buttonWidth / 2;
+					else if (MessageBoxEx::buttons == 2)
+						buttonX = MessageBoxEx::width / 2 - (buttonWidth * 2 + 20) / 2 - 10;
 					else
-						buttonX = MessageBoxEx::width / 2 - (buttonWidth * 3 + 40) / 2 + (buttonWidth + 20) * 1 - 5;
+						buttonX = MessageBoxEx::width / 2 - (buttonWidth * 3 + 40) / 2 - 5;
 				}
 				else {
-					if (MessageBoxEx::buttons == 2)
+					if (MessageBoxEx::buttons == 1)
 						buttonX = MessageBoxEx::width - 25 - buttonWidth * 1 - 10;
-					else
+					else if (MessageBoxEx::buttons == 2)
 						buttonX = MessageBoxEx::width - 25 - buttonWidth * 2 - 10 - 20;
+					else
+						buttonX = MessageBoxEx::width - 25 - buttonWidth * 3 - 10 - 20 * 2;
 				}
 
-				mhWnd2 = CreateWindowEx(WS_EX_STATICEDGE, _T("Button"), MessageBoxEx::button2.c_str(), WS_VISIBLE | WS_CHILD | WS_TABSTOP, buttonX, buttonY, buttonWidth, buttonHeight, _hWnd, nullptr, hInst, nullptr);
-				if (mhWnd2 == nullptr) return (LRESULT)nullptr;
-				SendMessage((mhWnd2), WM_SETFONT, (WPARAM)mhFont, 0);
-			}
+				mhWnd1 = CreateWindowEx(WS_EX_STATICEDGE, _T("Button"), MessageBoxEx::button1.c_str(), WS_VISIBLE | WS_CHILD | WS_TABSTOP, buttonX, buttonY, buttonWidth, buttonHeight, _hWnd, nullptr, hInst, nullptr);
+				if (mhWnd1 == nullptr) return (LRESULT)nullptr;
+				SendMessage((mhWnd1), WM_SETFONT, (WPARAM)mhFont, 0);
 
-			// button 3
-			if (MessageBoxEx::buttons == 3) {
-				if (MessageBoxEx::center)
-					buttonX = MessageBoxEx::width / 2 - (buttonWidth * 3 + 40) / 2 + (buttonWidth + 20) * 2 - 5;
-				else
-					buttonX = MessageBoxEx::width - 25 - buttonWidth * 1 - 10;
+				// button 2
+				if (MessageBoxEx::buttons >= 2) {
+					if (MessageBoxEx::center) {
+						if (MessageBoxEx::buttons == 2)
+							buttonX = MessageBoxEx::width / 2 - (buttonWidth * 2 + 20) / 2 + buttonWidth + 20 - 10;
+						else
+							buttonX = MessageBoxEx::width / 2 - (buttonWidth * 3 + 40) / 2 + (buttonWidth + 20) * 1 - 5;
+					}
+					else {
+						if (MessageBoxEx::buttons == 2)
+							buttonX = MessageBoxEx::width - 25 - buttonWidth * 1 - 10;
+						else
+							buttonX = MessageBoxEx::width - 25 - buttonWidth * 2 - 10 - 20;
+					}
 
-				mhWnd3 = CreateWindowEx(WS_EX_STATICEDGE, _T("Button"), MessageBoxEx::button3.c_str(), WS_VISIBLE | WS_CHILD | WS_TABSTOP, buttonX, buttonY, buttonWidth, buttonHeight, _hWnd, nullptr, hInst, nullptr);
-				if (mhWnd3 == nullptr) return (LRESULT)nullptr;
-				SendMessage((mhWnd3), WM_SETFONT, (WPARAM)mhFont, 0);
+					mhWnd2 = CreateWindowEx(WS_EX_STATICEDGE, _T("Button"), MessageBoxEx::button2.c_str(), WS_VISIBLE | WS_CHILD | WS_TABSTOP, buttonX, buttonY, buttonWidth, buttonHeight, _hWnd, nullptr, hInst, nullptr);
+					if (mhWnd2 == nullptr) return (LRESULT)nullptr;
+					SendMessage((mhWnd2), WM_SETFONT, (WPARAM)mhFont, 0);
+				}
+
+				// button 3
+				if (MessageBoxEx::buttons == 3) {
+					if (MessageBoxEx::center)
+						buttonX = MessageBoxEx::width / 2 - (buttonWidth * 3 + 40) / 2 + (buttonWidth + 20) * 2 - 5;
+					else
+						buttonX = MessageBoxEx::width - 25 - buttonWidth * 1 - 10;
+
+					mhWnd3 = CreateWindowEx(WS_EX_STATICEDGE, _T("Button"), MessageBoxEx::button3.c_str(), WS_VISIBLE | WS_CHILD | WS_TABSTOP, buttonX, buttonY, buttonWidth, buttonHeight, _hWnd, nullptr, hInst, nullptr);
+					if (mhWnd3 == nullptr) return (LRESULT)nullptr;
+					SendMessage((mhWnd3), WM_SETFONT, (WPARAM)mhFont, 0);
+				}
 			}
 
 			// icon
@@ -351,6 +360,7 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 			break;
 		}
 		case WM_DESTROY: {
+			MessageBoxEx::mRunning = false;
 			DeleteObject(mhFont);
 			EnableWindow(mhWndParent, TRUE);
 			SetForegroundWindow(mhWndParent);
@@ -426,15 +436,27 @@ bool MessageBoxEx::MessageBox(int& _result)
 	if (MessageBoxEx::blockParent)
 		parent = mhWndParent;
 
+	DWORD dwStyle = WS_POPUPWINDOW | WS_CAPTION | WS_TABSTOP | WS_VISIBLE;
+	dwStyle = dwStyle & ~WS_MAXIMIZEBOX;
+	dwStyle = dwStyle & ~WS_MINIMIZEBOX;
+	if (MessageBoxEx::noTitle)
+		dwStyle = dwStyle & ~WS_CAPTION;
+
 	mhWndMessageBoxEx = CreateWindowEx(
-		WS_EX_DLGMODALFRAME, _T("MessageBoxEx"), title.c_str(), 
-		WS_POPUPWINDOW | WS_CAPTION | WS_TABSTOP | WS_VISIBLE, 
+		WS_EX_DLGMODALFRAME, _T("MessageBoxEx"), MessageBoxEx::title.c_str(), dwStyle,
 		(rc.right - MessageBoxEx::width) / 2, (rc.bottom - MessageBoxEx::width / 2) / 2, 
 		MessageBoxEx::width, 50 + buttonY + buttonHeight,
 		parent, nullptr, nullptr, nullptr
 	);
-	if (mhWndMessageBoxEx == nullptr) {
+	if (mhWndMessageBoxEx == nullptr)
 		return false;
+
+	HMENU pSysMenu = GetSystemMenu(mhWndMessageBoxEx, FALSE);
+	if (pSysMenu) {
+		RemoveMenu(pSysMenu, SC_RESTORE, MF_BYCOMMAND);
+		RemoveMenu(pSysMenu, SC_SIZE, MF_BYCOMMAND);
+		RemoveMenu(pSysMenu, SC_MINIMIZE, MF_BYCOMMAND);
+		RemoveMenu(pSysMenu, SC_MAXIMIZE, MF_BYCOMMAND);
 	}
 
 	SetTextAlignment(mhWndPrompt, SS_LEFT);
@@ -446,14 +468,13 @@ bool MessageBoxEx::MessageBox(int& _result)
 	SendMessage((HWND)mhWnd3, BM_SETSTYLE, (WPARAM)LOWORD(BS_PUSHBUTTON), MAKELPARAM(TRUE, 0));
 	
 	// default button
-	{
-		if (MessageBoxEx::defaultButton < 0 || MessageBoxEx::defaultButton > MessageBoxEx::buttons) MessageBoxEx::defaultButton = 1;
+	if (MessageBoxEx::buttons > 0) {
+		if (MessageBoxEx::defaultButton < 0 || MessageBoxEx::defaultButton > MessageBoxEx::buttons)
+			MessageBoxEx::defaultButton = 1;
 
 		if (MessageBoxEx::defaultButton == 1)		SetFocus(mhWnd1);
 		else if (MessageBoxEx::defaultButton == 2)	SetFocus(mhWnd2);
 		else if (MessageBoxEx::defaultButton == 3)	SetFocus(mhWnd3);
-
-		MessageBoxEx::mResultFromButtons = MessageBoxEx::defaultButton;
 	}
 
 	if (MessageBoxEx::blockParent)
@@ -461,43 +482,75 @@ bool MessageBoxEx::MessageBox(int& _result)
 	ShowWindow(mhWndMessageBoxEx, SW_SHOW);
 	UpdateWindow(mhWndMessageBoxEx);
 
-	BOOL ret = false;
+	if (MessageBoxEx::buttons == 0)
+		SetFocus(mhWndMessageBoxEx);
+
+	DWORD startTick = GetTickCount();
+
+	if (MessageBoxEx::minimumDisplayTime > 0)
+		Sleep(MessageBoxEx::minimumDisplayTime);
+
 	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0)) {
-		if (msg.message == WM_KEYDOWN) {
-			if (msg.wParam == VK_ESCAPE) {
-				SendMessage(mhWndMessageBoxEx, WM_DESTROY, 0, 0);
-				MessageBoxEx::mResultFromButtons = 0;
-				ret = false;
-			} else if (msg.wParam == VK_RETURN) {
-				SendMessage(mhWndMessageBoxEx, WM_DESTROY, 0, 0);
-				ret = true;
-			} else if (msg.wParam == VK_TAB) {
-				HWND hWndFocused = GetFocus();
-				if (hWndFocused == mhWnd1) {
-					if (MessageBoxEx::buttons > 1) {
-						SetFocus(mhWnd2);
-						MessageBoxEx::mResultFromButtons = 2;
-					}
-				}
-				if (hWndFocused == mhWnd2) {
-					if (MessageBoxEx::buttons == 2) {
-						SetFocus(mhWnd1);
-						MessageBoxEx::mResultFromButtons = 1;
-					}
-					else {
-						SetFocus(mhWnd3);
-						MessageBoxEx::mResultFromButtons = 3;
-					}
-				}
-				if (hWndFocused == mhWnd3) {
-					SetFocus(mhWnd1);
+	while (MessageBoxEx::mRunning) {
+		if (
+			(MessageBoxEx::timeUntilEndOfApplication > 0 && GetTickCount() > (startTick + MessageBoxEx::timeUntilEndOfApplication)) ||
+			(MessageBoxEx::fileRequiredForCompletion.empty() == false && PathFileExistsW(MessageBoxEx::fileRequiredForCompletion.c_str())) ||
+			(MessageBoxEx::timeUntilEndOfApplication <= 0 && MessageBoxEx::buttons == 0)
+		) {
+			MessageBoxEx::mResultFromButtons = MessageBoxEx::defaultButton;
+			HWND hWndFocused = GetFocus();
+			if (hWndFocused) {
+				if (hWndFocused == mhWnd1)
 					MessageBoxEx::mResultFromButtons = 1;
+				else if (hWndFocused == mhWnd2)
+					MessageBoxEx::mResultFromButtons = 2;
+				else if (hWndFocused == mhWnd3)
+					MessageBoxEx::mResultFromButtons = 3;
+			}
+			MessageBoxEx::mRunning = false;
+			break;
+		}
+
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0) {
+			if (msg.message == WM_KEYDOWN) {
+				if (msg.wParam == VK_ESCAPE) {
+					MessageBoxEx::mResultFromButtons = 0;
+					SendMessage(mhWndMessageBoxEx, WM_DESTROY, 0, 0);
+					MessageBoxEx::mRunning = false;
+					break;
+				} else if (msg.wParam == VK_RETURN) {
+					MessageBoxEx::mResultFromButtons = MessageBoxEx::defaultButton;
+					HWND hWndFocused = GetFocus();
+					if (hWndFocused) {
+						if (hWndFocused == mhWnd1)
+							MessageBoxEx::mResultFromButtons = 1;
+						else if (hWndFocused == mhWnd2)
+							MessageBoxEx::mResultFromButtons = 2;
+						else if (hWndFocused == mhWnd3)
+							MessageBoxEx::mResultFromButtons = 3;
+					}
+					SendMessage(mhWndMessageBoxEx, WM_DESTROY, 0, 0);
+					MessageBoxEx::mRunning = false;
+					break;
+				} else if (msg.wParam == VK_TAB) {
+					HWND hWndFocused = GetFocus();
+					HWND tmpFocus = mhWnd1;
+					if (hWndFocused) {
+						if (hWndFocused == mhWnd1) {
+							if (MessageBoxEx::buttons > 1)
+								tmpFocus = mhWnd2;
+						}
+						else if (hWndFocused == mhWnd2) {
+							if (MessageBoxEx::buttons > 2)
+								tmpFocus = mhWnd3;
+						}
+					}
+					SetFocus(tmpFocus);
 				}
 			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
 		}
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
 	}
 
 	_result = MessageBoxEx::mResultFromButtons;
@@ -506,7 +559,10 @@ bool MessageBoxEx::MessageBox(int& _result)
 		MessageBoxEx::mIcon = nullptr;
 	}
 
-	return ret;
+	if (MessageBoxEx::fileRequiredForCompletion.empty() == false && PathFileExistsW(MessageBoxEx::fileRequiredForCompletion.c_str()) && MessageBoxEx::deleteFileRequiredForCompletion)
+		DeleteFile(MessageBoxEx::fileRequiredForCompletion.c_str());
+
+	return true;
 }
 
 long MessageBoxEx::GetDiameterX(RECT _rect)

@@ -37,6 +37,7 @@ public:
 	static pair<bool, wstring> pen;
 
 	static wstring title;
+	static bool	noTitle;
 	static wstring prompt;
 	static wstring iconFile;
 	static wstring iconApp;
@@ -55,6 +56,11 @@ public:
 	static wstring button3;
 	static bool center;
 
+	static int		timeUntilEndOfApplication;
+	static int		minimumDisplayTime;
+	static wstring	fileRequiredForCompletion;
+	static bool		deleteFileRequiredForCompletion;
+
 	static bool MessageBox(int& _result);
 
 private:
@@ -69,6 +75,7 @@ private:
 	static int		mResultFromButtons;
 	static HWND		mhWndIcon;
 	static HBITMAP	mIcon;
+	static bool		mRunning;
 
 	static LRESULT CALLBACK WndProc(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam);
 
