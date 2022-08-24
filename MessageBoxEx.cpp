@@ -362,8 +362,6 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 		case WM_DESTROY: {
 			MessageBoxEx::mRunning = false;
 			DeleteObject(mhFont);
-			EnableWindow(mhWndParent, TRUE);
-			SetForegroundWindow(mhWndParent);
 			DestroyWindow(_hWnd);
 			PostQuitMessage(0);
 			break;
@@ -562,6 +560,8 @@ bool MessageBoxEx::MessageBox(int& _result)
 	if (MessageBoxEx::fileRequiredForCompletion.empty() == false && PathFileExistsW(MessageBoxEx::fileRequiredForCompletion.c_str()) && MessageBoxEx::deleteFileRequiredForCompletion)
 		DeleteFile(MessageBoxEx::fileRequiredForCompletion.c_str());
 
+	EnableWindow(mhWndParent, TRUE);
+	SetForegroundWindow(mhWndParent);
 	return true;
 }
 
