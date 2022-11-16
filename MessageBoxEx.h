@@ -20,63 +20,55 @@ public:
 		_POINTER,
 	};
 
-	static struct InformationAboutPositionOfMessageBoxEx {
+	struct InformationAboutPositionOfMessageBoxEx {
 		MONITOR		monitor;
 		UINT		id;
 		POSITION	type;
 		POINT		delta;
-	} position;
+	};
 
-	static int width;
-	static int fontSize;
-	static int linesOfText;
-	static wstring fontName;
+	static InformationAboutPositionOfMessageBoxEx& Position() { static InformationAboutPositionOfMessageBoxEx mPosition; return mPosition; };
 
-	static pair<bool, wstring> brush;
-	static pair<bool, wstring> background;
-	static pair<bool, wstring> pen;
+	static int& Width() { static int mWidth = 600; return mWidth; };
+	static int& FontSize() { static int mFontSize = 22; return mFontSize; };
+	static int& LinesOfText() { static int mLinesOfText = 1; return mLinesOfText; };
+	static wstring& FontName() { static wstring mFontName = _T("Consolas"); return mFontName; };
 
-	static wstring title;
-	static bool	noTitle;
-	static wstring prompt;
-	static wstring iconFile;
-	static wstring iconApp;
-	static int iconSize;
-	static bool iconBorder;
-	static bool topMost;
-	static bool blockParent;
-	static bool windowsReturnCode;
+	static pair<bool, wstring>& Brush() { static pair<bool, wstring> mBrush = pair<bool, wstring>(false, _T("#000000")); return mBrush; };
+	static pair<bool, wstring>& Background() { static pair<bool, wstring> mBackground = pair<bool, wstring>(false, _T("#000000")); return mBackground; };
+	static pair<bool, wstring>& Pen() { static pair<bool, wstring> mPen = pair<bool, wstring>(false, _T("#ffffff")); return mPen; };
 
-	static bool quiet;
+	static wstring& Title() { static wstring mTitle = _T("MessageBoxEx"); return mTitle; };
 
-	static int buttons;
-	static int defaultButton;
-	static wstring button1;
-	static wstring button2;
-	static wstring button3;
-	static bool center;
+	static bool& NoTitle() { static bool mNoTitle = false; return mNoTitle; };
+	static wstring& Prompt() { static wstring mPrompt = _T("Message."); return mPrompt; };
+	static wstring& IconFile() { static wstring mIconFile = _T(""); return mIconFile; };
+	static wstring& IconApp() { static wstring mIconApp = _T(""); return mIconApp; };
+	static int& IconSize() { static int mIconSize = 0; return mIconSize; };
+	static bool& IconBorder() { static bool mIconBorder = false; return mIconBorder; };
 
-	static int		timeUntilEndOfApplication;
-	static int		minimumDisplayTime;
-	static wstring	fileRequiredForCompletion;
-	static bool		deleteFileRequiredForCompletion;
+	static bool& TopMost() { static bool mTopMost = false; return mTopMost; };
+	static bool& BlockParent() { static bool mBlockParent = false; return mBlockParent; };
+
+	static bool& WindowsReturnCode() { static bool mWindowsReturnCode = false; return mWindowsReturnCode; };
+
+	static bool& Quiet() { static bool mQuiet = false; return mQuiet; };
+
+	static int& Buttons() { static int mButtons = 1; return mButtons; };
+	static int& DefaultButton() { static int mDefaultButton = 1; return mDefaultButton; };
+	static wstring& Button1() { static wstring mButton1 = _T("Yes"); return mButton1; };
+	static wstring& Button2() { static wstring mButton2 = _T("No"); return mButton2; };
+	static wstring& Button3() { static wstring mButton3 = _T("Cancel"); return mButton3; };
+	static bool& Center() { static bool mCenter = false; return mCenter; };
+
+	static int& TimeUntilEndOfApplication() { static int mTimeUntilEndOfApplication = -1; return mTimeUntilEndOfApplication; };
+	static int& MinimumDisplayTime() { static int mMinimumDisplayTime = -1; return mMinimumDisplayTime; };
+	static wstring& FileRequiredForCompletion() { static wstring mFileRequiredForCompletion = _T(""); return mFileRequiredForCompletion; };
+	static bool& DeleteFileRequiredForCompletion() { static bool mDeleteFileRequiredForCompletion = false; return mDeleteFileRequiredForCompletion; };
 
 	static bool MessageBox(int& _result);
 
 private:
-	static HFONT	mhFont;
-	static HWND		mhWndParent;
-	static HWND		mhWndPrompt;
-	static HWND		mhWndMessageBoxEx;
-	static HWND		mhWnd1;
-	static HWND		mhWnd2;
-	static HWND		mhWnd3;
-	static HBRUSH	mhbrBkgnd;
-	static int		mResultFromButtons;
-	static HWND		mhWndIcon;
-	static HBITMAP	mIcon;
-	static bool		mRunning;
-
 	static LRESULT CALLBACK WndProc(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam);
 
 	static void SetTextAlignment(HWND _hwnd, int _textAlignment);

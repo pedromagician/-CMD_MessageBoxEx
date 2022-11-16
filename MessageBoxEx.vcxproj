@@ -56,6 +56,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <ForcedIncludeFiles>$(SolutionDir)debug.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -74,6 +75,7 @@
       <Optimization>MinSpace</Optimization>
       <UseFullPaths>true</UseFullPaths>
       <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <ForcedIncludeFiles>$(SolutionDir)debug.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -84,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Debug.cpp" />
     <ClCompile Include="MessageBoxEx.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="CommandLine.cpp" />
@@ -91,6 +94,7 @@
     <ClCompile Include="Monitors.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="MessageBoxEx.h" />
     <ClInclude Include="Monitors.h" />
     <ClInclude Include="resource.h" />
