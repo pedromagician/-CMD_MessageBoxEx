@@ -455,8 +455,7 @@ bool MessageBoxEx::MessageBox(int& _result)
 	while (mRunning) {
 		if (
 			(MessageBoxEx::TimeUntilEndOfApplication() > 0 && GetTickCount() > (startTick + MessageBoxEx::TimeUntilEndOfApplication())) ||
-			(MessageBoxEx::FileRequiredForCompletion().empty() == false && PathFileExistsW(MessageBoxEx::FileRequiredForCompletion().c_str())) ||
-			(MessageBoxEx::TimeUntilEndOfApplication() <= 0 && MessageBoxEx::Buttons() == 0)
+			(MessageBoxEx::FileRequiredForCompletion().empty() == false && PathFileExistsW(MessageBoxEx::FileRequiredForCompletion().c_str()))
 		) {
 			mResultFromButtons = MessageBoxEx::DefaultButton();
 			HWND hWndFocused = GetFocus();
