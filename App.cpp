@@ -63,6 +63,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cmd.Add(CommandLine::_TRUE,		1,	_T("-iconborder"),							_T("This argument allows you to draw a border around the image."),									&MessageBoxEx::IconBorder());
 	cmd.Add(CommandLine::_STRING,	1,	_T("-iconapp"),								_T("The 'xxx' argument specifies the icon file for the application. (ICO/BMP)"),					&MessageBoxEx::IconApp());
 	cmd.Add(CommandLine::_ENUM,		1,	_T("-button"),								_T("The argument 'xxx' specifies the number of buttons. Allowed options: 0|1|2|3."),				&MessageBoxEx::Buttons(),			&string2buttons);
+	cmd.Add(CommandLine::_INT,		1,	_T("-widthbuttons"),						_T("The 'xxx' argument specifies the bonus width(px) of the buttons."),								&MessageBoxEx::ButtonsWidth());
 	cmd.Add(CommandLine::_TRUE,		1,	_T("-center"),								_T("The argument enables button centering."),														&MessageBoxEx::Center());
 	cmd.Add(CommandLine::_STRING,	1,	_T("-b1"),									_T("The 'xxx' argument specifies the text of the button 1."),										&MessageBoxEx::Button1());
 	cmd.Add(CommandLine::_STRING,	1,	_T("-b2"),									_T("The 'xxx' argument specifies the text of the button 2."),										&MessageBoxEx::Button2());

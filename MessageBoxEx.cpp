@@ -102,7 +102,7 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 			// buttons
 			if (MessageBoxEx::Buttons() > 0) {
 				int buttonX = 0;
-				int buttonWidth = FontSize() * 120 / 22;
+				int buttonWidth = FontSize() * 120 / 22 + MessageBoxEx::ButtonsWidth();
 				int buttonHeight = FontSize() + 8;
 				int buttonY = 10 + FontSize() / 2 + FontSize() * LinesOfText() + 10;
 

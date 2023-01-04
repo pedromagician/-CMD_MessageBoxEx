@@ -54,6 +54,7 @@ public:
 
 	static bool& Quiet() { static bool mQuiet = false; return mQuiet; };
 
+	static int& ButtonsWidth() { static int mButtonsWidth = 0; return mButtonsWidth; };
 	static int& Buttons() { static int mButtons = 1; return mButtons; };
 	static int& DefaultButton() { static int mDefaultButton = 1; return mDefaultButton; };
 	static wstring& Button1() { static wstring mButton1 = _T("Yes"); return mButton1; };
