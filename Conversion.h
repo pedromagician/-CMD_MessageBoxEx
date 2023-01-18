@@ -16,4 +16,6 @@ public:
 	static wstring ToLower(wstring _val);
 
 	static void StringReplaceAll(wstring& _mess, const wstring& _oldStr, const wstring& _newStr);
+
+	static void UnicodeCodeConverter(wstring& _mess);
 };

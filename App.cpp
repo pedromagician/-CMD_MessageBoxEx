@@ -49,7 +49,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	CommandLine cmd;
 	cmd.Add(CommandLine::_STRING,	2,	_T("-title"),		_T("-t"),				_T("The 'xxx' argument specifies the name of the dialog."),											&MessageBoxEx::Title());
 	cmd.Add(CommandLine::_TRUE,		2,	_T("-noTitle"),		_T("-nt"),				_T("This argument turns off the border of the dialog."),											&MessageBoxEx::NoTitle());
-	cmd.Add(CommandLine::_STRING,	2,	_T("-message"),		_T("-m"),				_T("The 'xxx' argument specifies the text of the dialog. A new line can be inserted using \\n."),	&MessageBoxEx::Prompt());
+	cmd.Add(CommandLine::_STRING,	2,	_T("-message"),		_T("-m"),				_T("The 'xxx' argument specifies the text of the dialog. A new line can be inserted using \\n. Inserting Unicode characters \\u{1F44D}."),	&MessageBoxEx::Prompt());
 	cmd.Add(CommandLine::_TRUE,		3,	_T("-help"),		_T("-h"),	_T("-?"),	_T("To view help."),																				&help);
 	cmd.Add(CommandLine::_STRING,	2,	_T("-font"),		_T("-f"),				_T("The 'xxx' argument specifies the font of the dialog box."),										&MessageBoxEx::FontName());
 	cmd.Add(CommandLine::_INT,		2,	_T("-fontsize"),	_T("-fs"),				_T("The 'xxx' argument specifies the font size of the dialog box."),								&MessageBoxEx::FontSize());

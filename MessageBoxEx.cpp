@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "MessageBoxEx.h"
 #include "Conversion.h"
 #include "Monitors.h"
@@ -357,6 +357,12 @@ LRESULT CALLBACK MessageBoxEx::WndProc(HWND _hWnd, UINT _message, WPARAM _wParam
 
 bool MessageBoxEx::MessageBox(int& _result)
 {
+	Conversion::UnicodeCodeConverter(Title());
+	Conversion::UnicodeCodeConverter(Prompt());
+	Conversion::UnicodeCodeConverter(Button1());
+	Conversion::UnicodeCodeConverter(Button2());
+	Conversion::UnicodeCodeConverter(Button3());
+
 	mhWndParent = GetActiveWindow();
 	if (!mhWndParent)
 		mhWndParent = GetForegroundWindow();

@@ -1,4 +1,5 @@
 ﻿#include "conversion.h"
+#include <codecvt>
 
 #define WHITE_SPACE_CHARACTERS _T(" \t\n\v\f\r ")
 
@@ -90,4 +91,58 @@ void Conversion::HexToRGB(wstring _hex, int& _r, int& _g, int& _b)
 	_r = ToInt(sr, 16);
 	_g = ToInt(sg, 16);
 	_b = ToInt(sb, 16);
+}
+
+void Conversion::UnicodeCodeConverter(wstring& _mess)
+{
+	size_t startPos = 0, endPos = 0;
+
+	bool unicodeProcess = true;
+	while (unicodeProcess)
+	{
+		startPos = _mess.find(_T("\\u{"), startPos);
+		if (startPos == string::npos) break;
+		if (startPos != 0) {
+			if (_mess[startPos - 1] == '\\') {
+				wstring left = _mess.substr(0, startPos);
+				wstring right = _mess.substr(startPos + 1, _mess.length() - startPos - 1);
+				_mess = left + right;
+				continue;
+			}
+		}
+
+		endPos = _mess.find(_T("}"), startPos);
+		if (endPos == string::npos) break;
+
+		size_t tmpPos = _mess.find(_T("\\u{"), startPos + 1);
+		if (tmpPos < endPos) {
+			startPos = endPos;
+		}
+		else {
+			if (startPos < endPos) {
+				wstring before = _mess.substr(0, startPos);
+				wstring unicode = Conversion::TrimWhiteChar(_mess.substr(startPos + 3, endPos - startPos - 3));
+				wstring after = _mess.substr(endPos + 1, _mess.length() - endPos - 1);
+
+				if (unicode.empty() == false) {
+					if (unicode.length() % 2 != 0)
+						unicode = _T("0") + unicode;
+
+					char32_t ch32 = (int)_tcstol(unicode.c_str(), nullptr, 16);
+					wstring_convert<codecvt_utf8<char32_t>, char32_t> converter_32_8;
+					string utf8String = converter_32_8.to_bytes(static_cast<char32_t>(ch32));
+
+					wstring_convert<codecvt_utf8_utf16<wchar_t>> convert_8_16;
+					wstring utf16String = convert_8_16.from_bytes(utf8String);
+					_mess = before + utf16String + after;
+				}
+				else {
+					startPos = endPos;
+				}
+			}
+			else {
+				startPos = endPos;
+			}
+		}
+	}
 }
