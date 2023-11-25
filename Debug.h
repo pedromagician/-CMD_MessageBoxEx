@@ -5,9 +5,8 @@
 #include <crtdbg.h>
 
 #ifdef _DEBUG
-	#define DBG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
-#else
-	#define DBG_NEW new
+	#define DEBUG_NEW	new(_NORMAL_BLOCK, __FILE__, __LINE__)
+	//#define new DEBUG_NEW
 #endif
 
 class Debug {

@@ -1,6 +1,7 @@
+#include "stdafx.h"
+
 Debug theDebug;
 
-#include "stdafx.h"
 #include "CommandLine.h"
 #include "Conversion.h"
 #include "MessageBoxEx.h"

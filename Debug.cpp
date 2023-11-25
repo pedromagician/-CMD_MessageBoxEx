@@ -8,5 +8,5 @@ Debug::Debug()
 
 Debug::~Debug()
 {
-	_CrtDumpMemoryLeaks();
+	//_CrtDumpMemoryLeaks();
 }
