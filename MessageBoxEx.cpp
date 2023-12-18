@@ -452,6 +452,8 @@ bool MessageBoxEx::MessageBox(int& _result)
 	if (MessageBoxEx::Buttons() == 0)
 		SetFocus(mhWndMessageBoxEx);
 
+	SetCursor(LoadCursor(NULL, IDC_ARROW));
+
 	DWORD startTick = GetTickCount();
 
 	if (MessageBoxEx::MinimumDisplayTime() > 0)
