@@ -406,13 +406,21 @@ bool MessageBoxEx::MessageBox(int& _result)
 	DWORD dwStyle = WS_POPUPWINDOW | WS_CAPTION | WS_TABSTOP | WS_VISIBLE;
 	dwStyle = dwStyle & ~WS_MAXIMIZEBOX;
 	dwStyle = dwStyle & ~WS_MINIMIZEBOX;
-	if (MessageBoxEx::NoTitle())
+
+	int width = MessageBoxEx::Width();
+	int height = 50 + buttonY + buttonHeight;
+	if (MessageBoxEx::NoTitle()) {
 		dwStyle = dwStyle & ~WS_CAPTION;
+		width -= (GetSystemMetrics(SM_CXSIZEFRAME) + GetSystemMetrics(SM_CXBORDER)) * 2;
+		height -= (GetSystemMetrics(SM_CYCAPTION) + (GetSystemMetrics(SM_CYSIZEFRAME) + GetSystemMetrics(SM_CYBORDER)) * 2);
+	}
+	if (width < 0) width = 0;
+	if (height < 0) height = 0;
 
 	mhWndMessageBoxEx = CreateWindowEx(
 		WS_EX_DLGMODALFRAME, _T("MessageBoxEx"), MessageBoxEx::Title().c_str(), dwStyle,
 		(rc.right - MessageBoxEx::Width()) / 2, (rc.bottom - MessageBoxEx::Width() / 2) / 2,
-		MessageBoxEx::Width(), 50 + buttonY + buttonHeight,
+		width, height,
 		parent, nullptr, nullptr, nullptr
 	);
 	if (mhWndMessageBoxEx == nullptr)
