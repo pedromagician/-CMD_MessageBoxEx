@@ -74,6 +74,7 @@ int CommandLine::ParseCommandLine(int _argc, _TCHAR* _pArgv[], int& _correctPara
 		bool unknown = true;
 		for (unsigned int a = 0; a < mArguments.size(); a++) {
 			wstring tmpCommand = Conversion::ToLower(Conversion::TrimWhiteChar(_pArgv[i]));
+			tmpCommand = Conversion::TrimString(tmpCommand, L"-\\/");
 
 			if (find(mArguments[a].text.begin(), mArguments[a].text.end(), tmpCommand) != mArguments[a].text.end()) {
 				if (mArguments[a].type == _STRING) {
