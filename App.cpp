@@ -1,6 +1,8 @@
 #include "stdafx.h"
 
+#ifdef _DEBUG
 Debug theDebug;
+#endif
 
 #include "CommandLine.h"
 #include "Conversion.h"

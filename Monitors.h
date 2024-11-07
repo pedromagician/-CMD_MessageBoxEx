@@ -5,10 +5,10 @@
 class Monitors
 {
 public:
-	vector<int>       iMonitors;
-	vector<HMONITOR>  hMonitors;
-	vector<HDC>       hdcMonitors;
-	vector<RECT>      rcMonitors;
+	vector<size_t>		iMonitors;
+	vector<HMONITOR>	hMonitors;
+	vector<HDC>			hdcMonitors;
+	vector<RECT>		rcMonitors;
 
 	Monitors();
 	static BOOL CALLBACK MonitorEnum(HMONITOR _hMon, HDC _hdc, LPRECT _lprcMonitor, LPARAM _pData);
